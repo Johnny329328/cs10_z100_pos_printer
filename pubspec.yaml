@@ -1,7 +1,9 @@
 name: cs10_z100_pos_printer
 description: "A Flutter plugin for printing on CS10-Z100 POS terminals."
 version: 0.0.1
-homepage:
+homepage: https://github.com/AndresMontaniv/cs10_z100_pos_printer
+repository: https://github.com/AndresMontaniv/cs10_z100_pos_printer
+issue_tracker: https://github.com/AndresMontaniv/cs10_z100_pos_printer/issues 
 
 environment:
   sdk: '>=3.1.3 <4.0.0'
