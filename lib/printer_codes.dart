@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart' show immutable;
+
 class PrinterCodes {
   static const Map<int, String> _errorCodes = {
     0: 'SUCCESS',
@@ -49,13 +51,28 @@ class PrinterCodes {
   }
 }
 
+/// Enum representing the possible statuses of the printer.
 enum PrinterStatus {
+  /// The printer is in a successful state.
   success,
+
+  /// The printer is out of paper.
   needsPaper,
+
+  /// The printer is experiencing a high temperature.
   highTemperature,
+
+  /// The printer has a low battery voltage.
   lowBatteryVoltage,
+
+  /// The printer status is unknown or an error occurred.
   unknownStatusError;
 
+  /// Converts an integer printer code to a [PrinterStatus] enum value.
+  ///
+  /// The [code] parameter represents the integer code returned by the printer.
+  /// Returns the corresponding [PrinterStatus] enum value, or
+  /// [PrinterStatus.unknownStatusError] if the code is not recognized.
   static PrinterStatus fromPrinterCode(int? code) {
     switch (code) {
       case 0:
@@ -72,28 +89,92 @@ enum PrinterStatus {
   }
 }
 
+/// Enum representing the alignment options for printed text.
 enum PrinterStringAlign {
+  /// Align text to the start (left).
   start,
+
+  /// Align text to the center.
   center,
+
+  /// Align text to the end (right).
   end;
 }
 
-enum PrinterStringWidth {
+/// Enum representing the size options for printed text.
+enum PrinterStringSize {
   xsmall(16),
   small(20),
   medium(24),
   large(28);
 
+  /// The integer value representing the text size.
   final int value;
-  const PrinterStringWidth(this.value);
+  const PrinterStringSize(this.value);
 }
 
-enum PrinterStringHeight {
-  xsmall(16),
-  small(20),
-  medium(24),
-  large(28);
+/// Enum representing the zoom options for printed text.
+enum PrinterStringZoom {
+  /// No zoom.
+  zero(0),
 
+  /// Medium zoom.
+  medium(33);
+
+  /// The integer value representing the zoom.
   final int value;
-  const PrinterStringHeight(this.value);
+  const PrinterStringZoom(this.value);
+}
+
+/// Abstract base class for printable objects.
+///
+/// This class defines the common properties for all printable elements.
+@immutable
+abstract class Printable {
+  final String value;
+  final PrinterStringAlign align;
+
+  const Printable(
+    this.value, {
+    this.align = PrinterStringAlign.start,
+  });
+}
+
+/// Class representing text to be printed.
+///
+/// This class allows specifying the text content and formatting options.
+@immutable
+class PrinterText extends Printable {
+  /// The size of the text.
+  final PrinterStringSize size;
+
+  /// The zoom level of the text.
+  final PrinterStringZoom zoom;
+
+  const PrinterText(
+    super.value, {
+    super.align,
+    this.size = PrinterStringSize.medium,
+    this.zoom = PrinterStringZoom.zero,
+  });
+}
+
+/// Class representing a QR code to be printed.
+///
+/// This class allows specifying the QR code data and dimensions.
+@immutable
+class PrinterQrCode extends Printable {
+  /// The width of the QR code.
+
+  final int width;
+
+  /// The height of the QR code.
+  final int height;
+
+  const PrinterQrCode(
+    super.value, {
+    super.align,
+    this.width = 300,
+    this.height = 300,
+  });
 }

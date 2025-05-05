@@ -23,31 +23,33 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Future<void> _testPrinter() async {
+    final space = List.generate(8, (index) => '\n').join();
     final printer = Cs10Z100PosPrinter();
     final wasInit = await printer.printInit();
     if (!wasInit) return;
-    bool stringAdded = await printer.addString(
-      'Add String (start,small,small) example',
-      width: PrinterStringWidth.small,
-      height: PrinterStringHeight.small,
-    );
-    if (!stringAdded) return;
-    stringAdded = await printer.addString(
-      'String (center,m,m)',
-      align: PrinterStringAlign.center,
-      width: PrinterStringWidth.medium,
-      height: PrinterStringHeight.medium,
-    );
-    if (!stringAdded) return;
-    stringAdded = await printer.addString(
-      'Add String (end,large,large) example',
-      align: PrinterStringAlign.end,
-      width: PrinterStringWidth.large,
-      height: PrinterStringHeight.large,
-    );
-    if (!stringAdded) return;
-    stringAdded = await printer.addString('\n\n\n\n\n\n');
-    if (!stringAdded) return;
+    final List<Printable> strings = [
+      PrinterText(
+        'Example Title',
+        align: PrinterStringAlign.center,
+        zoom: PrinterStringZoom.medium,
+      ),
+      PrinterText('\n\n'),
+      PrinterText('Receipt Number:\t12034'),
+      PrinterText('Date:\t25/04/2025'),
+      PrinterText('\n'),
+      PrinterText('Amount: \$. 10.00'),
+      PrinterText('Tax:    \$.  1.00'),
+      PrinterText('Total:  \$. 11.00'),
+      PrinterText('\n'),
+      PrinterQrCode('https://pub.dev/packages/cs10_z100_pos_printer', align: PrinterStringAlign.center),
+      PrinterText('Url Link', align: PrinterStringAlign.center, size: PrinterStringSize.small),
+      PrinterText(space, align: PrinterStringAlign.center),
+    ];
+    bool stringAdded = false;
+    for (var str in strings) {
+      stringAdded = await printer.addToQueue(str);
+      if (!stringAdded) return;
+    }
     final printStarted = await printer.printStart();
     if (!printStarted) return;
     await printer.printClose();

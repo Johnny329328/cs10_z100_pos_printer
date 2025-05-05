@@ -26,8 +26,12 @@ class MockCs10Z100PosPrinterPlatform with MockPlatformInterfaceMixin implements 
   }
 
   @override
-  Future<bool> printString(
-    String text, [PrinterStringAlign? align, PrinterStringWidth? width, PrinterStringHeight? height]) {
+  Future<bool> printString(PrinterText printerText) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> printQrCode(PrinterQrCode qrCode) {
     throw UnimplementedError();
   }
 }

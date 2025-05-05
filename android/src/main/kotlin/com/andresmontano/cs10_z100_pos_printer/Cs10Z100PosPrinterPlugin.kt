@@ -3,6 +3,7 @@ package com.andresmontano.cs10_z100_pos_printer
 import android.util.Log
 import vpos.apipackage.PosApiHelper
 import vpos.apipackage.PrintInitException
+import com.google.zxing.BarcodeFormat
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -42,6 +43,9 @@ class Cs10Z100PosPrinterPlugin: FlutterPlugin, MethodCallHandler {
         "printCheckStatus" -> {
           printCheckStatus(result)
         }
+        "printQrCode" -> {
+          printQrCode(call,result)
+        }
         else -> {
           result.notImplemented()
         }
@@ -67,8 +71,8 @@ class Cs10Z100PosPrinterPlugin: FlutterPlugin, MethodCallHandler {
     try {
       val text = call.argument<String>("text")
       val align = call.argument<Int>("align") ?: 0 
-      val fontHeight = call.argument<Int>("fontHeight") ?: 24
-      val fontWidth = call.argument<Int>("fontWidth") ?: 24
+      val fontHeight = call.argument<Int>("fontSize") ?: 24
+      val fontWidth = call.argument<Int>("fontWidth") ?: 20
       val zoom = call.argument<Int>("zoom") ?: 0
 
       if (text == null) {
@@ -152,6 +156,30 @@ class Cs10Z100PosPrinterPlugin: FlutterPlugin, MethodCallHandler {
       result.success(status)
     } catch (e: Exception) {
       Log.e(TAG, "Unexpected error during printCheckStatus: ${e.message}")
+      result.error("UNEXPECTED_ERROR", "An unexpected error occurred", e.message)
+    }
+  }
+
+  private fun printQrCode(call: MethodCall, result: Result) {
+    try {
+      val content = call.argument<String>("data")
+      val width = call.argument<Int>("width")
+      val height = call.argument<Int>("height")
+
+      if (content == null || width == null || height == null) {
+          result.error("INVALID_ARGUMENT", "Missing required parameters", null)
+          return
+      }
+
+      val barcodeFormat = BarcodeFormat.QR_CODE
+
+      val printStatus = printer.PrintQrCode_Cut(content, width, height, barcodeFormat)
+      if (printStatus != 0) {
+          result.error("PRINT_QR_CODE_ERROR", "Printing QR code failed", printStatus)
+          return
+      }
+      result.success(printStatus)
+    } catch (e: Exception) {
       result.error("UNEXPECTED_ERROR", "An unexpected error occurred", e.message)
     }
   }

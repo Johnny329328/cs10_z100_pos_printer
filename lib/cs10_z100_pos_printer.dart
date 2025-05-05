@@ -14,17 +14,14 @@ class Cs10Z100PosPrinter {
   /// Returns `true` if the initialization was successful, `false` otherwise.
   Future<bool> printInit() => Cs10Z100PosPrinterPlatform.instance.printInit();
 
-  /// Prints the given [text] with optional formatting options.
+  /// Adds a [PrinterText] object to the print queue.
   ///
-  /// The [align] parameter specifies the text alignment (left, center, right).
-  /// The [height] and [width] parameters control the font size.
-  Future<bool> addString(
-    String text, {
-    PrinterStringAlign align = PrinterStringAlign.start,
-    PrinterStringWidth width = PrinterStringWidth.medium,
-    PrinterStringHeight height = PrinterStringHeight.medium,
-  }) =>
-      Cs10Z100PosPrinterPlatform.instance.printString(text, align, width, height);
+  /// This method is used to print text with specific formatting options
+  /// defined in the [PrinterText] object.
+  ///
+  /// Returns `true` if adding the text to the queue was successful,
+  /// `false` otherwise.
+  Future<bool> addString(PrinterText printerText) => Cs10Z100PosPrinterPlatform.instance.printString(printerText);
 
   /// Start printing process
   Future<bool> printStart() => Cs10Z100PosPrinterPlatform.instance.printStart();
@@ -34,4 +31,32 @@ class Cs10Z100PosPrinter {
 
   /// Check printer status
   Future<PrinterStatus> printCheckStatus() => Cs10Z100PosPrinterPlatform.instance.printCheckStatus();
+
+  /// Adds a [PrinterQrCode] object to the print queue.
+  ///
+  /// This method is used to print a QR code with the specified data
+  /// and dimensions defined in the [PrinterQrCode] object.
+  ///
+  /// Returns `true` if adding the QR code to the queue was successful,
+  /// `false` otherwise.
+  Future<bool> addQrCode(PrinterQrCode qrCode) => Cs10Z100PosPrinterPlatform.instance.printQrCode(qrCode);
+
+  /// Adds a [Printable] object to the print queue.
+  ///
+  /// This method handles adding different types of printable objects
+  /// (e.g., [PrinterText], [PrinterQrCode]) to the queue.
+  /// It determines the specific printing method to call based on the
+  /// runtime type of the [obj] parameter.
+  ///
+  /// Throws an [UnimplementedError] if an unsupported [Printable] type is provided.
+  Future<bool> addToQueue(Printable obj) async {
+    final type = obj.runtimeType;
+    if (type == PrinterText) {
+      return addString(obj as PrinterText);
+    }
+    if (type == PrinterQrCode) {
+      return addQrCode(obj as PrinterQrCode);
+    }
+    throw UnimplementedError();
+  }
 }

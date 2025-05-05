@@ -8,6 +8,7 @@ const _printInitMethodName = 'printInit';
 const _printStringMethodName = 'printString';
 const _printStartMethodName = 'printStart';
 const _printCloseMethodName = 'printClose';
+const _printQrCodeMethodName = 'printQrCode';
 
 /// An implementation of [Cs10Z100PosPrinterPlatform] that uses method channels.
 class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
@@ -31,17 +32,11 @@ class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
   Future<bool> printInit() => _invokeMethod(_printInitMethodName);
 
   @override
-  Future<bool> printString(
-    String text, [
-    PrinterStringAlign? align,
-    PrinterStringWidth? width,
-    PrinterStringHeight? height,
-  ]) =>
-      _invokeMethod(_printStringMethodName, {
-        'text': text,
-        'align': align?.index,
-        'fontWidth': width?.value,
-        'fontHeight': height?.value,
+  Future<bool> printString(PrinterText printerText) => _invokeMethod(_printStringMethodName, {
+        'text': printerText.value,
+        'align': printerText.align.index,
+        'fontSize': printerText.size.value,
+        'zoom': printerText.zoom.value,
       });
 
   @override
@@ -63,4 +58,11 @@ class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
     debugPrint('[InvokeMethod-$method] : $initializationMsg');
     return PrinterStatus.fromPrinterCode(respCode);
   }
+
+  @override
+  Future<bool> printQrCode(PrinterQrCode qrCode) => _invokeMethod(_printQrCodeMethodName, {
+        'data': qrCode.value,
+        'width': qrCode.width,
+        'height': qrCode.height,
+      });
 }

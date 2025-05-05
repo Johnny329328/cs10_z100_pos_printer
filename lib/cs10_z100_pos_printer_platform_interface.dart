@@ -26,11 +26,13 @@ abstract class Cs10Z100PosPrinterPlatform extends PlatformInterface {
 
   Future<bool> printInit();
 
-  Future<bool> printString(String text, [PrinterStringAlign align, PrinterStringWidth width, PrinterStringHeight height]);
+  Future<bool> printString(PrinterText printerText);
 
   Future<bool> printStart();
 
   Future<bool> printClose();
 
   Future<PrinterStatus> printCheckStatus();
+
+  Future<bool> printQrCode(PrinterQrCode qrCode);
 }
