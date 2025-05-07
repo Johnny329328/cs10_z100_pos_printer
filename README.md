@@ -1,6 +1,7 @@
 # CS10-Z100 POS Printer Plugin
 
-[![pub package](https://badges.pub/packages/cs10_z100_pos_printer/versions.svg)](https://pub.dev/packages/cs10_z100_pos_printer)
+[<img src="https://github.com/user-attachments/assets/6f0b1f67-f682-4f82-9f21-4822bf07cdfb" alt="pubdev logo" width="20" align="absmiddle"/> Pub Dev Package](https://pub.dev/packages/cs10_z100_pos_printer)
+
 
 A Flutter plugin for printing on the integrated terminal of CS10-Z100 POS devices.
 Built specifically for Android POS models CS10 and Z100
@@ -17,6 +18,11 @@ Built specifically for Android POS models CS10 and Z100
 ## Device Compatibility
 
 **Important:** This plugin is **exclusively compatible with the CS10-Z100 POS terminal**. It will not function correctly and will print  `Plugin does not support this device, use a CS10 or Z100 printer model` message on the console.
+These models usually look like this:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f41772cd-8128-4460-842d-8d85202d145c" alt="cs10z100model logo" width="300"/>
+</p>
 
 ## Installation
 
