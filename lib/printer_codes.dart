@@ -42,7 +42,8 @@ class PrinterCodes {
     -4009: 'PRINT SETFONTERR',
     -4010: 'PRINT GETFONTERR',
     9998: 'Printing has not been started. Call printInit()',
-    9999: 'Plugin does not support this device, use a CS10 or Z100 printer model',
+    9999:
+        'Plugin does not support this device, use a CS10 or Z100 printer model',
   };
 
   static String getLabel(int? code) {

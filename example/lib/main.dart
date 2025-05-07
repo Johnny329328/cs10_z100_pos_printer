@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final printer = Cs10Z100PosPrinter();
     final wasInit = await printer.printInit();
     if (!wasInit) return;
-    final List<Printable> strings = [
+    final List<Printable> list = [
       PrinterText(
         'Example Title',
         align: PrinterStringAlign.center,
@@ -41,13 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
       PrinterText('Tax:    \$.  1.00'),
       PrinterText('Total:  \$. 11.00'),
       PrinterText('\n'),
-      PrinterQrCode('https://pub.dev/packages/cs10_z100_pos_printer', align: PrinterStringAlign.center),
-      PrinterText('Url Link', align: PrinterStringAlign.center, size: PrinterStringSize.small),
+      PrinterQrCode('https://pub.dev/packages/cs10_z100_pos_printer',
+          align: PrinterStringAlign.center),
+      PrinterText('Url Link',
+          align: PrinterStringAlign.center, size: PrinterStringSize.small),
       PrinterText(space, align: PrinterStringAlign.center),
     ];
     bool stringAdded = false;
-    for (var str in strings) {
-      stringAdded = await printer.addToQueue(str);
+    for (var element in list) {
+      stringAdded = await printer.addToQueue(element);
       if (!stringAdded) return;
     }
     final printStarted = await printer.printStart();

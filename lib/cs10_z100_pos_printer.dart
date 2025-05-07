@@ -21,7 +21,8 @@ class Cs10Z100PosPrinter {
   ///
   /// Returns `true` if adding the text to the queue was successful,
   /// `false` otherwise.
-  Future<bool> addString(PrinterText printerText) => Cs10Z100PosPrinterPlatform.instance.printString(printerText);
+  Future<bool> addString(PrinterText printerText) =>
+      Cs10Z100PosPrinterPlatform.instance.printString(printerText);
 
   /// Start printing process
   Future<bool> printStart() => Cs10Z100PosPrinterPlatform.instance.printStart();
@@ -30,7 +31,8 @@ class Cs10Z100PosPrinter {
   Future<bool> printClose() => Cs10Z100PosPrinterPlatform.instance.printClose();
 
   /// Check printer status
-  Future<PrinterStatus> printCheckStatus() => Cs10Z100PosPrinterPlatform.instance.printCheckStatus();
+  Future<PrinterStatus> printCheckStatus() =>
+      Cs10Z100PosPrinterPlatform.instance.printCheckStatus();
 
   /// Adds a [PrinterQrCode] object to the print queue.
   ///
@@ -39,7 +41,8 @@ class Cs10Z100PosPrinter {
   ///
   /// Returns `true` if adding the QR code to the queue was successful,
   /// `false` otherwise.
-  Future<bool> addQrCode(PrinterQrCode qrCode) => Cs10Z100PosPrinterPlatform.instance.printQrCode(qrCode);
+  Future<bool> addQrCode(PrinterQrCode qrCode) =>
+      Cs10Z100PosPrinterPlatform.instance.printQrCode(qrCode);
 
   /// Adds a [Printable] object to the print queue.
   ///

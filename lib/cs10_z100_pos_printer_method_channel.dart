@@ -31,7 +31,8 @@ class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
   }
 
   Future<int?> _invokeMethodInt(String method, [dynamic arguments]) async {
-    final respCode = await methodChannel.invokeMethod<int>(method, arguments).onError(
+    final respCode =
+        await methodChannel.invokeMethod<int>(method, arguments).onError(
       (e, __) {
         _debugPrintInvokeMethodError(e, method);
         if (e is PlatformException) {
@@ -53,7 +54,8 @@ class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
   Future<bool> printInit() => _invokeMethodBool(_printInitMethodName);
 
   @override
-  Future<bool> printString(PrinterText printerText) => _invokeMethodBool(_printStringMethodName, {
+  Future<bool> printString(PrinterText printerText) =>
+      _invokeMethodBool(_printStringMethodName, {
         'text': printerText.value,
         'align': printerText.align.index,
         'fontSize': printerText.size.value,
@@ -73,7 +75,8 @@ class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
   }
 
   @override
-  Future<bool> printQrCode(PrinterQrCode qrCode) => _invokeMethodBool(_printQrCodeMethodName, {
+  Future<bool> printQrCode(PrinterQrCode qrCode) =>
+      _invokeMethodBool(_printQrCodeMethodName, {
         'data': qrCode.value,
         'width': qrCode.width,
         'height': qrCode.height,

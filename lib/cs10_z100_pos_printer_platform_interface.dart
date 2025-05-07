@@ -9,7 +9,8 @@ abstract class Cs10Z100PosPrinterPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static Cs10Z100PosPrinterPlatform _instance = MethodChannelCs10Z100PosPrinter();
+  static Cs10Z100PosPrinterPlatform _instance =
+      MethodChannelCs10Z100PosPrinter();
 
   /// The default instance of [Cs10Z100PosPrinterPlatform] to use.
   ///
