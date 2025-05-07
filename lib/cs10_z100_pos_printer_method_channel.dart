@@ -1,7 +1,9 @@
-import 'package:cs10_z100_pos_printer/printer_codes.dart';
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'printer_codes.dart';
 import 'cs10_z100_pos_printer_platform_interface.dart';
 
 const _printInitMethodName = 'printInit';
@@ -9,6 +11,9 @@ const _printStringMethodName = 'printString';
 const _printStartMethodName = 'printStart';
 const _printCloseMethodName = 'printClose';
 const _printQrCodeMethodName = 'printQrCode';
+const _printCheckStatusMethodName = 'printCheckStatus';
+const _methodChannelTag = 'CS10Z100_POS_PRINTER-METHOD_CHANNEL';
+const _successPrinterCode = 0;
 
 /// An implementation of [Cs10Z100PosPrinterPlatform] that uses method channels.
 class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
@@ -16,23 +21,39 @@ class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
   @visibleForTesting
   final methodChannel = const MethodChannel('cs10_z100_pos_printer');
 
-  Future<bool> _invokeMethod(String method, [dynamic arguments]) async {
+  void _debugPrintInvokeMethodError(dynamic e, String method) {
+    debugPrint('[$_methodChannelTag]/Error on method: $method. $e');
+  }
+
+  void _debugPrintInvokeMethodResult(int? code, String method) {
+    final printerCodeMsg = PrinterCodes.getLabel(code);
+    debugPrint('[$_methodChannelTag]/$method: $printerCodeMsg');
+  }
+
+  Future<int?> _invokeMethodInt(String method, [dynamic arguments]) async {
     final respCode = await methodChannel.invokeMethod<int>(method, arguments).onError(
-      (e, st) {
-        debugPrint('e: $e, st: $st');
+      (e, __) {
+        _debugPrintInvokeMethodError(e, method);
+        if (e is PlatformException) {
+          return int.tryParse(e.details.toString());
+        }
         return null;
       },
     );
-    final initializationMsg = PrinterCodes.getLabel(respCode);
-    debugPrint('[InvokeMethod-$method] : $initializationMsg');
-    return respCode == 0;
+    _debugPrintInvokeMethodResult(respCode, method);
+    return respCode;
+  }
+
+  Future<bool> _invokeMethodBool(String method, [dynamic arguments]) async {
+    final respCode = await _invokeMethodInt(method, arguments);
+    return respCode == _successPrinterCode;
   }
 
   @override
-  Future<bool> printInit() => _invokeMethod(_printInitMethodName);
+  Future<bool> printInit() => _invokeMethodBool(_printInitMethodName);
 
   @override
-  Future<bool> printString(PrinterText printerText) => _invokeMethod(_printStringMethodName, {
+  Future<bool> printString(PrinterText printerText) => _invokeMethodBool(_printStringMethodName, {
         'text': printerText.value,
         'align': printerText.align.index,
         'fontSize': printerText.size.value,
@@ -40,27 +61,19 @@ class MethodChannelCs10Z100PosPrinter extends Cs10Z100PosPrinterPlatform {
       });
 
   @override
-  Future<bool> printStart() => _invokeMethod(_printStartMethodName);
+  Future<bool> printStart() => _invokeMethodBool(_printStartMethodName);
 
   @override
-  Future<bool> printClose() => _invokeMethod(_printCloseMethodName);
+  Future<bool> printClose() => _invokeMethodBool(_printCloseMethodName);
 
   @override
   Future<PrinterStatus> printCheckStatus() async {
-    const method = 'printCheckStatus';
-    final respCode = await methodChannel.invokeMethod<int>(method).onError(
-      (e, st) {
-        debugPrint('e: $e, st: $st');
-        return null;
-      },
-    );
-    final initializationMsg = PrinterCodes.getLabel(respCode);
-    debugPrint('[InvokeMethod-$method] : $initializationMsg');
+    final respCode = await _invokeMethodInt(_printCheckStatusMethodName);
     return PrinterStatus.fromPrinterCode(respCode);
   }
 
   @override
-  Future<bool> printQrCode(PrinterQrCode qrCode) => _invokeMethod(_printQrCodeMethodName, {
+  Future<bool> printQrCode(PrinterQrCode qrCode) => _invokeMethodBool(_printQrCodeMethodName, {
         'data': qrCode.value,
         'width': qrCode.width,
         'height': qrCode.height,

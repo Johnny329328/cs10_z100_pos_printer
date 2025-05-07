@@ -41,13 +41,15 @@ class PrinterCodes {
     -4008: 'PRINT BUFFOVERFLOW',
     -4009: 'PRINT SETFONTERR',
     -4010: 'PRINT GETFONTERR',
+    9998: 'Printing has not been started. Call printInit()',
+    9999: 'Plugin does not support this device, use a CS10 or Z100 printer model',
   };
 
   static String getLabel(int? code) {
     if (code == null || !_errorCodes.containsKey(code)) {
       return 'UNKNOWN ERROR CODE - FAILURE';
     }
-    return ' "$code" : ${_errorCodes[0]!}';
+    return '"$code" - ${_errorCodes[code]!}';
   }
 }
 
