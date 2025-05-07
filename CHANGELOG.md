@@ -1,19 +1,15 @@
 # Changelog
 
+## [1.0.1] - Updated README
+
+* Added an image of the CS10-Z100 POS terminal to the README.md for better device identification.
+
 ## [1.0.0] - Major Update: Refactored Printing Methods and Added QR Code Support
 
 * **Breaking Change:** The `addString()` method has been completely refactored and is **not backward-compatible**.
     * This change was made to improve code organization and provide better encapsulation of text formatting options.
     * **Migration Guide:**
         * You **must** update your code to use the `addToString()` method and the `PrinterText` class to print text.
-        * Example:
-            ```dart
-            // Old:
-            await printer.addString('Hello', align: PrinterStringAlign.center, width: PrinterStringWidth.medium, height: PrinterStringHeight.medium);
-
-            // New:
-            await printer.addString(PrinterText(text: 'Hello', align: PrinterStringAlign.center));
-            ```
 * **New Feature:** Added `addQrCode()` method to print QR codes.
     * This method takes a `PrinterQrCode` object as a parameter.
 * **New Feature:** Introduced `addToQueue()` method for a more generic printing queue.
