@@ -62,20 +62,15 @@ class Cs10Z100PosPrinterPlugin: FlutterPlugin, MethodCallHandler {
       val model = Build.MODEL.uppercase() 
       val manufacturer = Build.MANUFACTURER.uppercase()
       val sdkInt = Build.VERSION.SDK_INT 
-      if (sdkInt < MIN_ANDROID_SDK_VERSION || sdkInt > MAX_ANDROID_SDK_VERSION) {
-        Log.d(TAG, "Android SDK: $sdkInt. Not within supported range ($MIN_ANDROID_SDK_VERSION - $MAX_ANDROID_SDK_VERSION).")
-        return false
-      }
-      if (!manufacturer.contains("CIONTEK")) {
-          Log.d(TAG, "Manufacturer: $manufacturer. Not 'CIONTEK'. This library is only compatible with CIONTEK devices.")
-          return false
-      }
       val modelPattern = "CS10|Z100".toRegex()
       if (!modelPattern.containsMatchIn(model)) {
           Log.d(TAG, "Model: $model. Does not match pattern 'CS10|Z100'.")
           return false
       }
-      Log.d(TAG, "Android SDK: $sdkInt, Model: $model, Manufacturer: $manufacturer. isSupported: true")
+      if (sdkInt < MIN_ANDROID_SDK_VERSION || sdkInt > MAX_ANDROID_SDK_VERSION) {
+        Log.d(TAG, "Android SDK: $sdkInt. Not within supported range ($MIN_ANDROID_SDK_VERSION - $MAX_ANDROID_SDK_VERSION).")
+        return false
+      }
       return true
     } catch (e: Exception) {
       Log.e(TAG, "Printer check support exception: ${e.message}")

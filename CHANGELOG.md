@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0] - Enhanced Device Compatibility Check
+
+* **Improved Compatibility Check:** The plugin now includes a more robust and precise device compatibility check.
+    * **Strictly enforces Android OS compatibility between Android 5.1 (API 22) and Android 7.1.1 (API 25) inclusive.**
+    * This ensures the plugin runs only on supported devices and OS versions, preventing crashes and unexpected behavior.
+
 ## [1.0.1] - Updated README
 
 * Added an image of the CS10-Z100 POS terminal to the README.md for better device identification.

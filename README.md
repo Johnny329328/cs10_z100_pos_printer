@@ -18,6 +18,9 @@ Built specifically for Android POS models CS10 and Z100
 ## Device Compatibility
 
 **Important:** This plugin is **exclusively compatible with the CS10-Z100 POS terminal**. It will not function correctly and will print  `Plugin does not support this device, use a CS10 or Z100 printer model` message on the console.
+* **Model:** Must contain "CS10" or "Z100" (case-insensitive, e.g., CS10Z100, CS10Android).
+* **Android OS Version:** Must be between **Android 5.1 (API 22) and Android 7.1.1 (API 25) inclusive.**
+
 These models usually look like this:
 
 <p align="center">
