@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       PrinterText('Tax:    \$.  1.00'),
       PrinterText('Total:  \$. 11.00'),
       PrinterText('\n'),
-      PrinterQrCode('https://pub.dev/packages/cs10_z100_pos_printer',
+      PrinterQrCode('https://py.miventa.dev/api/venta/pdf/28870',
           align: PrinterStringAlign.center),
       PrinterText('Url Link',
           align: PrinterStringAlign.center, size: PrinterStringSize.small),

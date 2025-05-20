@@ -18,12 +18,12 @@ class Cs10Z100PosPrinterPlugin: FlutterPlugin, MethodCallHandler {
     private const val TAG = "Cs10Z100PosPrinterPlugin" 
     private const val NOT_SUPPORTED_ERROR_CODE = 9999
     private const val NOT_INIT_ERROR_CODE = 9998
+    private const val MIN_ANDROID_SDK_VERSION = 22 // Corresponds to Android 5.1 Lollipop MR1
+    private const val MAX_ANDROID_SDK_VERSION = 25 // Corresponds to Android 7.0 Nougat
   }
 
   private lateinit var channel : MethodChannel
-  // private lateinit var printer : PosApiHelper 
   private var printer : PosApiHelper? = null
-  // private var isDeviceSupported: Boolean? = null
 
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -33,9 +33,6 @@ class Cs10Z100PosPrinterPlugin: FlutterPlugin, MethodCallHandler {
 
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
-        // "checkDeviceSupport" -> {
-        //   checkDeviceSupport(result)
-        // }
         "printInit" -> {
           initPrinter(result)
         }
@@ -62,33 +59,30 @@ class Cs10Z100PosPrinterPlugin: FlutterPlugin, MethodCallHandler {
 
   private fun checkDeviceSupport(): Boolean {
     try {
-      Log.d(TAG, "Checking if device is supported...")
-      val model = Build.MODEL
-      val deviceSupported = (model.equals("Z100", ignoreCase = true) || model.equals("CS10", ignoreCase = true))
-      Log.d(TAG, "Model: $model, Supported: $deviceSupported")
-      return deviceSupported
+      val model = Build.MODEL.uppercase() 
+      val manufacturer = Build.MANUFACTURER.uppercase()
+      val sdkInt = Build.VERSION.SDK_INT 
+      if (sdkInt < MIN_ANDROID_SDK_VERSION || sdkInt > MAX_ANDROID_SDK_VERSION) {
+        Log.d(TAG, "Android SDK: $sdkInt. Not within supported range ($MIN_ANDROID_SDK_VERSION - $MAX_ANDROID_SDK_VERSION).")
+        return false
+      }
+      if (!manufacturer.contains("CIONTEK")) {
+          Log.d(TAG, "Manufacturer: $manufacturer. Not 'CIONTEK'. This library is only compatible with CIONTEK devices.")
+          return false
+      }
+      val modelPattern = "CS10|Z100".toRegex()
+      if (!modelPattern.containsMatchIn(model)) {
+          Log.d(TAG, "Model: $model. Does not match pattern 'CS10|Z100'.")
+          return false
+      }
+      Log.d(TAG, "Android SDK: $sdkInt, Model: $model, Manufacturer: $manufacturer. isSupported: true")
+      return true
     } catch (e: Exception) {
       Log.e(TAG, "Printer check support exception: ${e.message}")
       return false
     }
   }
 
-  // private fun checkDeviceSupport(result: Result) {
-  //   try {
-  //     val model = Build.MODEL
-  //     val supported = (model.equals("Z100", ignoreCase = true) || model.equals("CS10", ignoreCase = true))
-  //     Log.d(TAG, "Supported: $supported")
-  //     if (supported) {
-  //       printer = PosApiHelper.getInstance()
-  //       result.success(0)
-  //     }else{
-  //       result.success(NOT_SUPPORTED_ERROR_CODE)
-  //     }
-  //   } catch (e: Exception) {
-  //     Log.e(TAG, "Printer check support exception: ${e.message}")
-  //     result.error("PRINT_CHECK_SUPPORT_EXCEPTION", "Check support exception", NOT_SUPPORTED_ERROR_CODE)
-  //   }
-  // }
 
   private fun initPrinter(result: Result) {
     val deviceSupported = checkDeviceSupport()
